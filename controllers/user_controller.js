@@ -52,7 +52,9 @@ async function userLogin(req, res) {
 
         return res.status(200).json({
             message: "User logged in successfully",
-            token: token
+            token: token,
+            userId: user._id,
+            username: user.username
         });
     }catch(err) {
         console.log("Error while logging in user")

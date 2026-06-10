@@ -1,4 +1,5 @@
 import argumentModel from '../models/argument.js';
+import debateModel from '../models/debate.js';
 
 async function addArgument(req, res) {
     try {
@@ -10,6 +11,16 @@ async function addArgument(req, res) {
 
         if (!['FOR', 'AGAINST'].includes(side)) {
             return res.status(400).json({ message: "Side must be either 'FOR' or 'AGAINST'" });
+        }
+
+        const debate = await debateModel.findById(debateId);
+
+        if (!debate) {
+            return res.status(404).json({ message: "Debate not found" });
+        }
+
+        if (debate.status === 'CLOSED') {
+            return res.status(403).json({ message: "Cannot add arguments to a closed debate" });
         }
 
         const argument = new argumentModel({
